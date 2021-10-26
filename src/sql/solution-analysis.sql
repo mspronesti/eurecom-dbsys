@@ -1,0 +1,1 @@
+-- Find the top 20 authors with the largest number of publications 

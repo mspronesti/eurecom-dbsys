@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS 
 		author,
-	        publication,
+	    publication,
 		wrote,
 		article,
 		book,
@@ -8,55 +8,54 @@ DROP TABLE IF EXISTS
 		inproceedings;
 
 CREATE TABLE author ( 
-	__id INTEGER PRIMARY KEY NOT NULL, 
+	__id INT PRIMARY KEY, 
 	name TEXT,
 	homepage TEXT
 );
 
 CREATE TABLE publication (
-	__pubid NUMERIC NOT NULL,
-	__pubkey TEXT UNIQUE NOT NULL PRIMARY KEY,
+	__pubid INT PRIMARY KEY,
+	__pubkey TEXT UNIQUE NOT NULL,
 	title TEXT,
-	year NUMERIC
+	year INT
 );
 
 CREATE TABLE wrote (
-   __id INTEGER,
-   __pubid TEXT,
-   PRIMARY KEY (__id, __pubid),
-   FOREIGN KEY (__id) REFERENCES author,
-   FOREIGN KEY (__pubid) REFERENCES publication
+   __id INT,
+   __pubid INT,
+   CONSTRAINT auth_fk FOREIGN KEY (__id) REFERENCES author,
+   CONSTRAINT pub_fk FOREIGN KEY (__pubid) REFERENCES publication
 );
 
 CREATE TABLE article (
-	__pubkey TEXT NOT NULL,
+	__pubid INT,
 	journal TEXT,
-	month INT,
-	volume INT,
-	_number INT,
-	FOREIGN KEY (__pubkey) REFERENCES publication 
+	month TEXT,
+	volume TEXT,
+	_number TEXT,
+	CONSTRAINT art_fk FOREIGN KEY (__pubid) REFERENCES publication 
 );
 
 CREATE TABLE book (
-	__pubkey TEXT PRIMARY KEY,
+	__pubid INT,
 	publisher TEXT,
-        isbn TEXT,
-	FOREIGN KEY (__pubkey) REFERENCES publication
+    isbn TEXT,
+	CONSTRAINT book_fk FOREIGN KEY (__pubid) REFERENCES publication
 );
 
 CREATE TABLE incollection (
-      __pubkey TEXT PRIMARY KEY,	
+      __pubid INT,	
       booktitle TEXT,
       publisher TEXT,
       isbn TEXT,
-      FOREIGN KEY (__pubkey) REFERENCES publication 
+      CONSTRAINT inc_fk FOREIGN KEY (__pubid) REFERENCES publication 
 );
 
 CREATE TABLE inproceedings (
-	__pubkey TEXT PRIMARY KEY,
+	__pubid INT,
 	booktitle TEXT,
 	editor TEXT,
-	FOREIGN KEY (__pubkey) REFERENCES publication
+	CONSTRAINT inp_fk FOREIGN KEY (__pubid) REFERENCES publication
 );
 
 
