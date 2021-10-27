@@ -1,3 +1,8 @@
+/*
+  this function retrieves a table (id, name, num_pubs)
+  of the top N authors with the largest number of pubblications
+  in conference . 
+*/
 CREATE OR REPLACE FUNCTION top_in_conference (
     N INTEGER, 
     conference TEXT

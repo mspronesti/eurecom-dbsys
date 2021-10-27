@@ -33,12 +33,10 @@ ORDER BY num_pubs DESC LIMIT 20;
 */
 
 
--- Find the top 20 authors with the largest number of pubblications
--- in STOC. Repeat for one more conferences of your choice 
--- (e.g. SIGMOD or VLDB)
+-- Find the top 20 authors with the largest number 
+-- of pubblications in STOC. 
 
-/* STOC */
-\i utils/top_in_conference.sql;
+\i utils/top_in_conference.sql
 SELECT top_in_conference(20, 'STOC');
 
 /*
@@ -67,7 +65,9 @@ SELECT top_in_conference(20, 'STOC');
  (20 rows)
 */
 
-/* SIGMOD */
+-- Repeat for one more conferences of your choice 
+-- (e.g. SIGMOD or VLDB)
+-- choice: SIGMOD (actual entry in the db 'SIGMOD Conference')
 SELECT top_in_conference(20, 'SIGMOD Conference');
 /*
           top_in_conference           
@@ -93,4 +93,50 @@ SELECT top_in_conference(20, 'SIGMOD Conference');
  (1269004,"Joseph M. Hellerstein",36)
  (1392714,"Kian-Lee Tan",33)
 (20 rows)
+*/
+
+-- Find all authors who published at least 10 SIGMOD papers but
+-- never published a PODS paper
+\i utils/at_least_except.sql
+SELECT at_least_except(10, 'SIGMOD Conference', 'PODS');
+
+
+
+
+-- Find all authors who published at least 5 PODS paper but never 
+-- published a SIGMOD paper
+SELECT at_least_except(5, 'PODS', 'SIGMOD Conference');
+/*
+          at_least_except           
+------------------------------------
+ (1677314,"Matthias Niewerth")
+ (1407390,"Kobbi Nissim")
+ (496341,"Cristian Riveros")
+ (1750317,"Miguel Romero 0001")
+ (2542062,"Thomas Schwentick")
+ (614326,"Domagoj Vrgoc")
+ (65545,"Alan Nash")
+ (153201,"Andreas Pieris")
+ (1731698,"Michael Mitzenmacher")
+ (2124820,"Reinhard Pichler")
+ (777194,"Francesco Scarcello")
+ (2627457,"Vassos Hadzilacos")
+ (1135925,"Jef Wijsen")
+ (1890816,"Nicole Schweikardt")
+ (1587031,"Marco A. Casanova")
+ (248031,"Atri Rudra")
+ (1337607,"Kari-Jouko Räihä")
+ (2420648,"Stavros S. Cosmadakis")
+ (855020,"Giuseppe De Giacomo")
+ (1641605,"Martin Grohe")
+ (1757886,"Mikolaj Bojanczyk")
+ (1588380,"Marco Console")
+ (1005321,"Hubie Chen")
+ (1850515,"Nancy A. Lynch")
+ (2413390,"Srikanta Tirthapura")
+ (675303,"Eljas Soisalon-Soininen")
+ (2110990,"Rasmus Pagh")
+ (559780,"David P. Woodruff")
+ (1912085,"Nofar Carmeli")
+(29 rows)
 */

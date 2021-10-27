@@ -23,8 +23,8 @@
 \i utils/author.sql
 \i utils/publication.sql
 \i utils/wrote.sql
--- \i utils/article.sql
--- \i utils/book.sql
- \i utils/inproceedings.sql
--- \i utils/incollection.sql
+\i utils/article.sql
+\i utils/book.sql
+\i utils/incollection.sql
+\i utils/inproceedings.sql
 
