@@ -17,7 +17,7 @@
   > the dropped constraints (if any) are restored 
 
   The naming convention for the table entries follows
-  the entries of the dataset (k, v, p, ...) 
+  the entries of the dataset (k, v, p, ...).
 */
 
 \i utils/author.sql
@@ -25,6 +25,6 @@
 \i utils/wrote.sql
 -- \i utils/article.sql
 -- \i utils/book.sql
--- \i utils/inproceedings.sql
+ \i utils/inproceedings.sql
 -- \i utils/incollection.sql
 

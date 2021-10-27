@@ -1,3 +1,14 @@
+/*
+  Note for the reader:
+  even though the text suggests not to 
+  introduce foreign-key constraints in the pubSchema,
+  I chose to insert them anyway and to drop them when 
+  needed (see transform.sql) restoring them eventually, 
+  for the sake of the completeness of the pubSchema.
+*/
+
+-- dropping tables if this
+-- queries are run multiple times
 DROP TABLE IF EXISTS 
 		author,
 	    publication,
@@ -5,7 +16,8 @@ DROP TABLE IF EXISTS
 		article,
 		book,
 		incollection,
-		inproceedings;
+		inproceedings
+		CASCADE;
 
 CREATE TABLE author ( 
 	__id INT PRIMARY KEY, 

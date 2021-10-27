@@ -15,14 +15,13 @@ CREATE TABLE pubs_not_hp AS(
         v <> 'Home Page'
 );
 
--- join pubs_not_hp with pub for publication type
+-- join pubs_not_hp with Pub for publication type
 CREATE TABLE __tmp1 AS(
     SELECT DISTINCT ON (pubkey)
         pubkey,
-        title,
-        pub.p AS type
+        title
     FROM
-        pubs_not_hp LEFT JOIN pub ON pubs_not_hp.pubkey = pub.k  
+        pubs_not_hp LEFT JOIN Pub ON pubs_not_hp.pubkey = Pub.k  
 );
 
 -- __tmp2 | pubkey | year
@@ -41,20 +40,21 @@ CREATE TABLE __tmp3 AS(
     SELECT DISTINCT ON (__tmp1.pubkey)
         __tmp1.pubkey,
         title,
-        year,
+        year
     FROM
-        __tmp1 LEFT JOIN __tmp2 ON __tmp1.pubkey = __tmp2.pubkey  
+        __tmp1 LEFT OUTER JOIN __tmp2 ON __tmp1.pubkey = __tmp2.pubkey  
 );
 
 -- insert into "publication" table defined in PubSchema
 CREATE SEQUENCE seq;
 INSERT INTO publication (
-    SELECT nextval('seq') as 
+    SELECT NEXTVAL('seq') 
+    AS 
         __pubid, 
-        __pubkey, 
+        pubkey, 
         title, 
-        CAST (year AS INTEGER), 
-        from __tmp3
+        CAST (year AS INTEGER)
+    FROM __tmp3
 );
 DROP SEQUENCE seq; 
 

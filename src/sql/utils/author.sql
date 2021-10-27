@@ -18,8 +18,8 @@ CREATE TABLE __tmp1 AS(
 -- join homepage pubkeys to corresponding URLs 
 CREATE TABLE __tmp2 AS(
     SELECT 
-        k as pubkey,
-        v as homepage
+        k AS pubkey,
+        v AS homepage
     FROM 
         field JOIN __tmp1 ON field.k = __tmp1.pubkey
     WHERE 
@@ -29,7 +29,7 @@ CREATE TABLE __tmp2 AS(
 -- unique authors names having an homepage
 CREATE TABLE __tmp3 AS (
     SELECT DISTINCT ON (v)
-        v as name,
+        v AS name,
         homepage 
     FROM 
         field LEFT JOIN __tmp2 ON field.k = __tmp2.pubkey
