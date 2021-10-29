@@ -28,10 +28,10 @@ SELECT p, COUNT(*) FROM Pub GROUP BY p;
 -- only in some instance of every type), but it should not return  publisher
 --  (since the latter does not occur in any publication of type inproceedings)
 SELECT f.p
-FROM Pub p, Field f
-WHERE p.k = f.k
-GROUP f.p
-HAVING COUNT(DISTINCT p.p) = 8;
+    FROM Pub p, Field f
+    WHERE p.k = f.k
+    GROUP BY f.p
+    HAVING COUNT(DISTINCT p.p) = 8;
 
 -- result:
 --   p    

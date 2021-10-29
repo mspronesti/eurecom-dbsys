@@ -34,7 +34,7 @@ CREATE TABLE __tmp3 AS (
     FROM 
         field LEFT JOIN __tmp2 ON field.k = __tmp2.pubkey
     WHERE 
-        p='author'
+        p ='author'
 );
 
 -- insert into "author" table defined in PubSchema
