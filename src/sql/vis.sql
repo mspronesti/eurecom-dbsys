@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS set_pubs;
 
 CREATE TABLE set_pubs AS (
     SELECT 
-        k, COUNT(*) pub_count
+        k, COUNT(*) author_count
     FROM (
         SELECT 
         __id, COUNT(*) AS k 

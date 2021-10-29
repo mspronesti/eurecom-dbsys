@@ -31,5 +31,5 @@ CREATE OR REPLACE FUNCTION at_least_except (
         FROM
             author JOIN wrote ON author.__id = wrote.__id
                    JOIN inproceedings ON wrote.__pubid = inproceedings.__pubid 
-                    AND inproceedings.booktitle = conf2;
+                                         AND inproceedings.booktitle = conf2;
 END$$;
