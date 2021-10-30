@@ -1,0 +1,91 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% er.tex
+% author: Massimiliano Pronesti
+% ER diagram for the first assignment of "Database Management Systems Implementation"
+% (DBSys) class at EURECOM
+% https://github.com/mspronesti/eurecom-dbsys/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[utf8]{inputenc}
+
+% Use Latin Modern, an improved version of the Computer Modern font
+\usepackage{lmodern}
+
+% Entity-relationsip package
+\usepackage{tikz-er2}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows}
+
+% Custom styling for entities, attributes, and relationships
+\tikzstyle{every entity} = [draw=blue!50!black!100, fill=blue!20]
+
+\tikzstyle{every attribute} = [draw=yellow!50!black!100, fill=yellow!20]
+
+\tikzstyle{every entity} = [top color=white, bottom color=blue!30, 
+							draw=blue!50!black!100, drop shadow]
+
+\tikzstyle{every relationship} = [top color=white, bottom color=red!20, 
+								 draw=red!50!black!100, drop shadow]
+
+\tikzstyle{every isa} = [top color=white, bottom color=green!20, 
+							draw=green!50!black!100, drop shadow]
+% Don't indent paragraphs
+\usepackage{parskip}
+
+% Disable page numbering
+\pagestyle{empty}
+
+\begin{document}
+	\begin{center}
+		\begin{tikzpicture}[node distance=6em, every edge/.style={link}]
+			\hspace{-4cm}
+			%%% Author
+			\node[entity] (auth) {Author};
+			\node[attribute] (a_id) [above left=2em of auth] {\key{id}} edge (auth);
+			\node[attribute] (a_name) [above right=2em of auth] {name} edge (auth);
+			\node[attribute] (a_hp) [above=2em of auth] {homepage} edge (auth);
+			
+			%%% Wrote
+			\node[relationship] (wr) [right of=auth, node distance=15em] {Wrote} edge (auth);
+			
+			%%% Publication
+			\node[entity] (pub) [right of=wr, node distance=15em] {Publication} edge (wr);
+			\node[attribute](p_id) [above left=2em of pub] {\key{pubid}} edge (pub);
+			\node[attribute](p_pkey) [above=2em of pub] {pubkey} edge (pub);
+			\node[attribute](p_title) [right=.5em of p_pkey] {title} edge (pub);
+			\node[attribute](p_year) [right=2em of pub] {year} edge (pub);
+			
+			%% inheritance
+			\node[isa] (isa) [below=2cm of pub] {IsA} edge (pub);
+			
+			%%% Book
+			\node[entity] (book) [below of=auth, node distance=25em] {Book} edge (isa);
+			\node[attribute] (b_isbn)[below =2em of book] {isbn} edge (book);
+			\node[attribute] (b_publisher)[below left=2em of book] {publisher} edge (book);
+							
+			%%% Inproceedings
+			\node[entity] (inp) [right of=book, node distance=12em]{Inproceedings} edge (isa);
+			\node[attribute] (inp_btitle)[below=1em of inp] {booktitle} edge (inp);
+			\node[attribute] (inp_ed)[below left=2em of inp] {editor} edge (inp);
+			
+			%%% Incollection
+			\node[entity] (inc) [right of=inp, node distance=13em]{Incollection} edge (isa);
+			\node[attribute] (inc_btitle)[below=1.5em of inc] {booktitle} edge (inc);
+			\node[attribute] (inc_isbn)[below right=2em of inc] {isbn} edge (inc);
+			\node[attribute] (inc_publisher)[below left=1em of inc] {publisher} edge (inc);
+	
+	
+			%%% Article
+			\node[entity] (art) [right of=inc, node distance=13em]{Article} edge (isa);
+			\node[attribute] (art_j)[below=2em of art] {journal} edge (art);
+	    	\node[attribute] (art_num)[right=1em of art] {number} edge (art);
+			\node[attribute] (art_vol)[below left=4em and .5em of art] {volume} edge (art);
+			\node[attribute] (art_month)[below right=2em of art] {month} edge (art);
+		\end{tikzpicture}
+	\end{center}
+\end{document}

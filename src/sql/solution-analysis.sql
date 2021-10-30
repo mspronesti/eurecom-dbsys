@@ -267,3 +267,153 @@ SELECT at_least_except(5, 'PODS', 'SIGMOD Conference');
    This query will take a few minutes to run.
 */
 
+/*
+  NOTE for the reader:
+  I interpreted the requirements as follows:
+  "find FOR EACH POSSIBLE DECADE the top author(s)"
+   hence I considered the decades
+   1936-1945
+   1937-1946
+   1938-1947
+   1939-1948
+   ...
+   2013-2022
+*/
+
+-- associate num_pubs to author id on each year
+CREATE TABLE __tmp1 AS (
+    SELECT 
+        CAST(p.year AS INT), 
+        wrote.__id id, 
+        COUNT(__pubkey) num_pubs
+    FROM 
+        publication AS p 
+    INNER JOIN wrote ON p.__pubid = wrote.__pubid
+    WHERE 
+        p.year IS NOT NULL
+    GROUP BY p.year, wrote.__id
+);
+
+
+WITH __tmp2 AS (
+    SELECT t1.year AS decade_start_year, 
+           t1.id, 
+           SUM(t2.num_pubs) AS total
+    FROM 
+        __tmp1 AS t1 
+        INNER JOIN __tmp1 AS t2 ON t1.id = t2.id
+    WHERE 
+        t1.year <= t2.year AND t2.year < t1.year + 10 
+        AND t1.year <= 2013 -- last decade is 2013-2022
+    GROUP BY t1.year, t1.id
+    )
+    SELECT 
+        decade_start_year, 
+        id, 
+        name,
+        total
+    FROM 
+        __tmp2 JOIN author ON __tmp2.id = author.__id
+    WHERE 
+        (decade_start_year, total) IN (
+            SELECT 
+                decade_start_year, 
+                MAX(total)
+            FROM __tmp2
+            GROUP BY decade_start_year
+);
+
+DROP TABLE IF EXISTS __tmp1;
+
+/*
+ decade_start_year |   id    |          name           | total 
+-------------------+---------+-------------------------+-------
+              1936 | 2703801 | Willard Van Orman Quine |    12
+              1937 | 2703801 | Willard Van Orman Quine |    12
+              1938 | 2703801 | Willard Van Orman Quine |    12
+              1939 | 1120816 | J. C. C. McKinsey       |    10
+              1940 | 2703801 | Willard Van Orman Quine |    10
+              1941 |  791699 | Frederic Brenton Fitch  |    10
+              1941 | 2703801 | Willard Van Orman Quine |    10
+              1942 |  791699 | Frederic Brenton Fitch  |    10
+              1943 | 1874249 | Nelson Goodman          |     5
+              1943 | 2157085 | R. M. Martin            |     5
+              1944 |  791699 | Frederic Brenton Fitch  |    10
+              1945 | 2703801 | Willard Van Orman Quine |    14
+              1946 | 2703801 | Willard Van Orman Quine |    13
+              1947 | 2703801 | Willard Van Orman Quine |    13
+              1948 |  927178 | Hao Wang 0001           |    14
+              1949 |  475056 | Claude E. Shannon       |    11
+              1949 | 1233522 | John R. Myhill          |    11
+              1950 |  927178 | Hao Wang 0001           |    14
+              1951 | 1233522 | John R. Myhill          |     9
+              1952 |  927178 | Hao Wang 0001           |    12
+              1952 | 1235894 | John W. Carr III        |    12
+              1953 |  927178 | Hao Wang 0001           |    11
+              1954 |  932762 | Harry D. Huskey         |    25
+              1955 |  322119 | Boleslaw Sobocinski     |    32
+              1956 |   64961 | Alan J. Perlis          |    20
+              1956 | 1874377 | Nelson M. Blachman      |    20
+              1957 | 2276334 | Saul Gorn               |    30
+              1958 | 2311694 | Seymour Ginsburg        |    29
+              1959 | 2311694 | Seymour Ginsburg        |    34
+              1960 |  956934 | Henry C. Thacher Jr.    |    39
+              1961 |  295270 | Bernard A. Galler       |    37
+              1961 |  956934 | Henry C. Thacher Jr.    |    37
+              1962 |  295270 | Bernard A. Galler       |    35
+              1962 | 2311694 | Seymour Ginsburg        |    35
+              1963 | 2311694 | Seymour Ginsburg        |    38
+              1964 |  834959 | Gerard Salton           |    39
+              1964 | 2311694 | Seymour Ginsburg        |    39
+              1965 | 1133242 | Jeffrey D. Ullman       |    63
+              1966 | 1133242 | Jeffrey D. Ullman       |    73
+              1967 | 1133242 | Jeffrey D. Ullman       |    80
+              1968 | 1133242 | Jeffrey D. Ullman       |    85
+              1969 | 1133242 | Jeffrey D. Ullman       |    79
+              1970 |  262805 | Azriel Rosenfeld        |    80
+              1970 | 1133242 | Jeffrey D. Ullman       |    80
+              1971 |  875752 | Grzegorz Rozenberg      |    99
+              1972 |  875752 | Grzegorz Rozenberg      |   122
+              1973 |  875752 | Grzegorz Rozenberg      |   138
+              1974 |  262805 | Azriel Rosenfeld        |   151
+              1975 |  262805 | Azriel Rosenfeld        |   157
+              1976 |  262805 | Azriel Rosenfeld        |   157
+              1977 |  262805 | Azriel Rosenfeld        |   158
+              1978 |  262805 | Azriel Rosenfeld        |   158
+              1979 |  262805 | Azriel Rosenfeld        |   164
+              1980 |  262805 | Azriel Rosenfeld        |   172
+              1981 |  262805 | Azriel Rosenfeld        |   183
+              1982 |  262805 | Azriel Rosenfeld        |   175
+              1983 |  262805 | Azriel Rosenfeld        |   165
+              1984 | 1741360 | Micha Sharir            |   161
+              1985 | 1741360 | Micha Sharir            |   180
+              1986 | 1741360 | Micha Sharir            |   190
+              1987 | 1741360 | Micha Sharir            |   198
+              1988 |  553592 | David J. Evans 0001     |   220
+              1989 |  553592 | David J. Evans 0001     |   235
+              1990 | 2586517 | Toshio Fukuda           |   256
+              1991 | 2586517 | Toshio Fukuda           |   284
+              1992 | 2586517 | Toshio Fukuda           |   293
+              1993 | 2586517 | Toshio Fukuda           |   301
+              1994 | 2542191 | Thomas S. Huang         |   300
+              1995 | 2542191 | Thomas S. Huang         |   327
+              1996 | 2542191 | Thomas S. Huang         |   351
+              1997 | 2542191 | Thomas S. Huang         |   386
+              1998 | 2692080 | Wen Gao 0001            |   440
+              1999 | 2692080 | Wen Gao 0001            |   502
+              2000 | 2692080 | Wen Gao 0001            |   564
+              2001 | 1016379 | H. Vincent Poor         |   625
+              2002 | 1016379 | H. Vincent Poor         |   717
+              2003 | 1016379 | H. Vincent Poor         |   798
+              2004 | 1016379 | H. Vincent Poor         |   879
+              2005 | 1016379 | H. Vincent Poor         |   961
+              2006 | 1016379 | H. Vincent Poor         |  1004
+              2007 | 1016379 | H. Vincent Poor         |  1108
+              2008 | 1016379 | H. Vincent Poor         |  1152
+              2009 | 1016379 | H. Vincent Poor         |  1181
+              2010 | 1016379 | H. Vincent Poor         |  1214
+              2011 | 1016379 | H. Vincent Poor         |  1401
+              2012 | 1016379 | H. Vincent Poor         |  1484
+              2013 | 1016379 | H. Vincent Poor         |  1381
+(87 rows)
+*/

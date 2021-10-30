@@ -7,11 +7,11 @@
   for the sake of the completeness of the pubSchema.
 */
 
--- dropping tables if this
+-- dropping tables if these
 -- queries are run multiple times
 DROP TABLE IF EXISTS 
 		author,
-	    publication,
+                publication,
 		wrote,
 		article,
 		book,
@@ -69,8 +69,3 @@ CREATE TABLE inproceedings (
 	editor TEXT,
 	CONSTRAINT inp_fk FOREIGN KEY (__pubid) REFERENCES publication
 );
-
-
-
-
-

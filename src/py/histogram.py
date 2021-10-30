@@ -1,7 +1,5 @@
-import matplotlib.pyplot
 import pandas as pd
 import matplotlib.pyplot as plt
-
 
 header = ['k', 'author_count']
 df = pd.read_csv('../sql/set_pubs.csv', names=header)
