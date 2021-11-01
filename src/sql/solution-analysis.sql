@@ -304,7 +304,6 @@ WITH __tmp2 AS (
         INNER JOIN __tmp1 AS t2 ON t1.id = t2.id
     WHERE 
         t1.year <= t2.year AND t2.year < t1.year + 10 
-        AND t1.year <= 2013 -- last decade is 2013-2022
     GROUP BY t1.year, t1.id
     )
     SELECT 
@@ -415,5 +414,15 @@ DROP TABLE IF EXISTS __tmp1;
               2011 | 1016379 | H. Vincent Poor         |  1401
               2012 | 1016379 | H. Vincent Poor         |  1484
               2013 | 1016379 | H. Vincent Poor         |  1381
-(87 rows)
+              2014 | 1016379 | H. Vincent Poor         |  1280
+              2015 | 1016379 | H. Vincent Poor         |  1174
+              2016 | 1016379 | H. Vincent Poor         |  1057
+              2017 | 2774398 | Yang Liu                |   937
+              2018 | 2774398 | Yang Liu                |   846
+              2019 | 2774398 | Yang Liu                |   719
+              2020 | 2774398 | Yang Liu                |   526
+              2021 | 2774398 | Yang Liu                |   285
+              2022 |    2464 | Aaron D. Ames           |     6
+(96 rows)
+
 */

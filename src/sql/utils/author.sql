@@ -5,7 +5,7 @@
 
 
 -- pubkeys referring to homepages
-CREATE TABLE __tmp1 AS(
+CREATE TABLE homepages AS(
     SELECT DISTINCT
         k AS pubkey
     FROM
@@ -16,23 +16,23 @@ CREATE TABLE __tmp1 AS(
 );
 
 -- join homepage pubkeys to corresponding URLs 
-CREATE TABLE __tmp2 AS(
+CREATE TABLE homepages_urls AS(
     SELECT 
         k AS pubkey,
         v AS homepage
     FROM 
-        field JOIN __tmp1 ON field.k = __tmp1.pubkey
+        field JOIN homepages ON field.k = homepages.pubkey
     WHERE 
         p = 'url'
 );
 
 -- unique authors names having an homepage
-CREATE TABLE __tmp3 AS (
+CREATE TABLE author_with_hp AS (
     SELECT DISTINCT ON (v)
         v AS name,
         homepage 
     FROM 
-        field LEFT JOIN __tmp2 ON field.k = __tmp2.pubkey
+        field LEFT JOIN homepages_urls ON field.k = homepages_urls.pubkey
     WHERE 
         p ='author'
 );
@@ -43,9 +43,9 @@ INSERT INTO author (
 	SELECT NEXTVAL('seq') 
 	AS
         __id, name, homepage 
-	FROM __tmp3
+	FROM author_with_hp
 );
 DROP SEQUENCE seq;
 
 -- drop temporary tables
-DROP TABLE IF EXISTS __tmp1, __tmp2, __tmp3 CASCADE; 
+DROP TABLE IF EXISTS homepages, homepages_urls, author_with_hp CASCADE; 

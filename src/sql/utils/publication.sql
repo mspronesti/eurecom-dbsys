@@ -16,7 +16,7 @@ CREATE TABLE pubs_not_hp AS(
 );
 
 -- join pubs_not_hp with Pub for publication type
-CREATE TABLE __tmp1 AS(
+CREATE TABLE pub_titles AS(
     SELECT DISTINCT ON (pubkey)
         pubkey,
         title
@@ -24,8 +24,8 @@ CREATE TABLE __tmp1 AS(
         pubs_not_hp LEFT JOIN Pub ON pubs_not_hp.pubkey = Pub.k  
 );
 
--- __tmp2 | pubkey | year
-CREATE TABLE __tmp2 AS(
+-- pub_years | pubkey | year
+CREATE TABLE pub_years AS(
     SELECT
         k as pubkey,
         v AS year
@@ -36,13 +36,13 @@ CREATE TABLE __tmp2 AS(
 );
 
 -- join wrt year
-CREATE TABLE __tmp3 AS(
-    SELECT DISTINCT ON (__tmp1.pubkey)
-        __tmp1.pubkey,
+CREATE TABLE tmp_pubs AS(
+    SELECT DISTINCT ON (pub_titles.pubkey)
+        pub_titles.pubkey,
         title,
         year
     FROM
-        __tmp1 LEFT OUTER JOIN __tmp2 ON __tmp1.pubkey = __tmp2.pubkey  
+        pub_titles LEFT OUTER JOIN pub_years ON pub_titles.pubkey = pub_years.pubkey  
 );
 
 -- insert into "publication" table defined in PubSchema
@@ -54,8 +54,8 @@ INSERT INTO publication (
         pubkey, 
         title, 
         CAST (year AS INTEGER)
-    FROM __tmp3
+    FROM tmp_pubs
 );
 DROP SEQUENCE seq; 
 
-DROP TABLE IF EXISTS pubs_not_hp, __tmp1, __tmp2, __tmp3 CASCADE;
+DROP TABLE IF EXISTS pubs_not_hp, pub_titles, pub_years, tmp_pubs CASCADE;
