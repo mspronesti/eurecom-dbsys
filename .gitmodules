@@ -1,0 +1,8 @@
+[submodule "lab2"]
+	path = lab2/simpledb
+	url = https://github.com/mspronesti/simpledb
+	branch = delivery-1
+[submodule "lab3"]
+	path = lab3/simpledb
+	url = https://github.com/mspronesti/simpledb
+	branch = delivery-2
